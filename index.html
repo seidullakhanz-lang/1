@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<title>Ұлттық музыкалық аспаптар және ойын</title>
+
+<style>
+    body{
+        font-family: Arial, sans-serif;
+        background:#fcefd9;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1, h2{
+        text-align: center;
+        color: #7a3e00;
+    }
+
+    .instrument-container{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 25px;
+        margin-top:20px;
+    }
+
+    .instrument{
+        width: 250px;
+        background: #fff4e6;
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        transition: 0.4s;
+    }
+
+    .instrument:hover{
+        transform: scale(1.05);
+        box-shadow: 0 0 18px rgba(255,180,90,0.6);
+    }
+
+    .instrument img{
+        width: 220px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .instrument img.playing {
+        animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+        0% { transform: rotate(0deg); }
+        25% { transform: rotate(3deg); }
+        50% { transform: rotate(-3deg); }
+        75% { transform: rotate(3deg); }
+        100% { transform: rotate(0deg); }
+    }
+
+    button{
+        margin-top:10px;
+        padding:10px 15px;
+        background:#c68027;
+        color:white;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+        transition:0.3s;
+    }
+
+    button:hover{
+        background:#995f1e;
+    }
+
+    button.active {
+        background:#e6a64b;
+        box-shadow:0 0 12px #ffce75;
+    }
+
+    .quiz-box{
+        margin-top:40px;
+        background:#fff4e6;
+        padding:20px;
+        border-radius:10px;
+        width:80%;
+        margin-left:auto;
+        margin-right:auto;
+        box-shadow:0 0 10px rgba(0,0,0,0.1);
+    }
+
+    @keyframes fly {
+        from { transform: translateY(0); opacity:1; }
+        to { transform: translateY(-120px); opacity:0; }
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Қазақтың Ұлттық Музыкалық Аспаптары</h1>
+<h2>Домбыра • Қобыз • Сыбызғы • Жетіген</h2>
+
+<div class="instrument-container">
+
+    <div class="instrument">
+        <h3>Домбыра</h3>
+        <img src="12.jpg" alt="Домбыра">
+        <audio id="dombSound" src="11.mp3"></audio>
+        <button onclick="toggleSound('dombSound')">Дыбысты тыңдау</button>
+    </div>
+
+    <div class="instrument">
+        <h3>Қобыз</h3>
+        <img src="13.jpg" alt="Қобыз">
+        <audio id="kobyzSound" src="2.mp3"></audio>
+        <button onclick="toggleSound('kobyzSound')">Дыбысты тыңдау</button>
+    </div>
+
+    <div class="instrument">
+        <h3>Сыбызғы</h3>
+        <img src="15.jpg" alt="Сыбызғы">
+        <audio id="sybSound" src="1.mp3"></audio>
+        <button onclick="toggleSound('sybSound')">Дыбысты тыңдау</button>
+    </div>
+
+    <div class="instrument">
+        <h3>Жетіген</h3>
+        <img src="14.jpg" alt="Жетіген">
+        <audio id="jetSound" src="3.mp3"></audio>
+        <button onclick="toggleSound('jetSound')">Дыбысты тыңдау</button>
+    </div>
+
+</div>
+
+<!-- Ойын -->
+<div class="quiz-box">
+    <h2>Ұлттық Өнер Ойыны</h2>
+    <p><b>Сұрақтарға жауап бер!</b></p>
+
+    <div id="question-area">
+        <p id="question-text">Сұрақ жүктелуде...</p>
+
+        <button onclick="answer(0)" id="btn0"></button><br><br>
+        <button onclick="answer(1)" id="btn1"></button><br><br>
+        <button onclick="answer(2)" id="btn2"></button>
+    </div>
+
+    <h3 id="result" style="text-align:center; margin-top:20px;"></h3>
+</div>
+
+<script>
+// === АСПАП ДЫБЫСТАРЫ ===
+const audios = [
+    document.getElementById('dombSound'),
+    document.getElementById('kobyzSound'),
+    document.getElementById('sybSound'),
+    document.getElementById('jetSound')
+];
+
+function highlightButton(id){
+    document.querySelectorAll(".instrument button").forEach(b => b.classList.remove("active"));
+    let btn = document.querySelector(`[onclick="toggleSound('${id}')"]`);
+    btn.classList.add("active");
+}
+
+function animateImage(id){
+    let img = document.querySelector(`[onclick="toggleSound('${id}')"]`).parentElement.querySelector("img");
+    img.classList.add("playing");
+    setTimeout(()=> img.classList.remove("playing"), 400);
+}
+
+function toggleSound(id){
+    let currentAudio = document.getElementById(id);
+
+    audios.forEach(a=>{
+        if(a !== currentAudio){
+            a.pause();
+            a.currentTime = 0;
+        }
+    });
+
+    if(!currentAudio.paused){
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+    } else {
+        currentAudio.play();
+    }
+
+    highlightButton(id);
+    animateImage(id);
+}
+
+// === ОЙЫН: 2 ДЕҢГЕЙ ===
+const level1 = [
+    {q:"Қазақтың қос ішекті ұлттық аспабы?", answers:["Сыбызғы","Домбыра","Даңғыра"], correct:1},
+    {q:"Қобыз қандай аспап?", answers:["Ысқышпен ойналатын","Үрмелі","Ұрмалы"], correct:0},
+    {q:"Ұлттық билер қалай аталады?", answers:["Қара жорға","Брейк-данс","Фламенко"], correct:0},
+    {q:"Сыбызғы қандай аспап?", answers:["Үрмелі","Ұрмалы","Ішекті"], correct:0},
+    {q:"Қазақтың дәстүрлі ән айту өнері?", answers:["Опера","Жыр-терме","Рэп"], correct:1}
+];
+
+const level2 = [
+    {q:"Домбырада неше ішек болады?", answers:["3","2","1"], correct:1},
+    {q:"Қорқыт ата қандай аспапта ойнаған?", answers:["Қобыз","Домбыра","Жетіген"], correct:0},
+    {q:"Жетіген атауы нені білдіреді?", answers:["Жеті бала","Жеті ішек","Жеті әуен"], correct:1},
+    {q:"Қобыздың үні қандай?", answers:["Майда тәтті","Қоңыр, мұңды","Өте қатты"], correct:1},
+    {q:"Күй орындаушы кім?", answers:["Биші","Күйші","Жыршы"], correct:1}
+];
+
+let level = 1;
+let current = 0;
+let questions = level1;
+
+// Қазақы ою эффекті
+function kazakhEffect(){
+    let elem = document.createElement("div");
+    elem.innerHTML = "⚜";
+    elem.style.position = "absolute";
+    elem.style.left = (Math.random()*70+15)+"%";
+    elem.style.top = "65%";
+    elem.style.fontSize = "55px";
+    elem.style.color = "#b86b00";
+    elem.style.opacity = "1";
+    elem.style.transition = "all 1.3s ease";
+    document.body.appendChild(elem);
+
+    setTimeout(()=>{
+        elem.style.transform = "translateY(-80px)";
+        elem.style.opacity = "0";
+    }, 200);
+
+    setTimeout(()=> elem.remove(), 1600);
+}
+
+function loadQuestion(){
+    let q = questions[current];
+    document.getElementById("question-text").innerText =
+        "ДЕҢГЕЙ " + level + ": " + q.q;
+
+    document.getElementById("btn0").innerText = q.answers[0];
+    document.getElementById("btn1").innerText = q.answers[1];
+    document.getElementById("btn2").innerText = q.answers[2];
+}
+
+function answer(option){
+    let q = questions[current];
+
+    if(option === q.correct){
+        document.getElementById("result").innerText = "Дұрыс! 👍";
+        kazakhEffect();
+    } else {
+        document.getElementById("result").innerText = "Қате! 👀";
+    }
+
+    setTimeout(()=>{
+        document.getElementById("result").innerText = "";
+        current++;
+
+        if(current >= questions.length){
+
+            if(level === 1){
+                level = 2;
+                questions = level2;
+                current = 0;
+
+                document.getElementById("result").innerText =
+                    "🔥 2-ДЕҢГЕЙ БАСТАЛДЫ! 🔥";
+
+                setTimeout(()=>{
+                    document.getElementById("result").innerText = "";
+                    loadQuestion();
+                },1500);
+
+                return;
+            }
+
+            if(level === 2){
+                document.getElementById("question-area").innerHTML =
+                    `<h2 style='text-align:center;'>🎉 БАРЛЫҚ ДЕҢГЕЙДІ БІТІРДІҢ! 🎉</h2>
+                     <button onclick='restart()' style='margin-top:20px;'>Қайта бастау</button>`;
+                return;
+            }
+        }
+
+        loadQuestion();
+    },1400);
+}
+
+function restart(){
+    level = 1;
+    questions = level1;
+    current = 0;
+
+    document.getElementById("question-area").innerHTML = `
+        <p id="question-text"></p>
+        <button onclick="answer(0)" id="btn0"></button><br><br>
+        <button onclick="answer(1)" id="btn1"></button><br><br>
+        <button onclick="answer(2)" id="btn2"></button>
+    `;
+    loadQuestion();
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
